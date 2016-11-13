@@ -90,13 +90,15 @@ class S(BaseHTTPRequestHandler):
         if 'username' in postvars:
             username = postvars['username']
             if username is None or len(username) != 1:
-                return
+                self.wfile.write('{"error": "user not found"}')
+                return            
             username = username[0]
             return_code = os.system("python " + os.getcwd() + "/lastfm.py " + username)
         if return_code == 0:
             self.wfile.write('{"file": "output/' + username + '.png"}')
         else:
-            self.wfile.write('{"error": "user not found"}')            
+            self.wfile.write('{"error": "user not found"}')
+        return
         
 def run(server_class=HTTPServer, handler_class=S, port=80):
     server_address = ('', port)
