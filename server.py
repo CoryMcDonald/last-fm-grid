@@ -86,13 +86,17 @@ class S(BaseHTTPRequestHandler):
         # Doesn't do anything with posted data
         self._set_headers()
         postvars = self.parse_POST()
+        return_code = 1
         if 'username' in postvars:
             username = postvars['username']
             if username is None or len(username) != 1:
                 return
             username = username[0]
-            os.system("python " + os.getcwd() + "/lastfm.py " + username)
-        self.wfile.write('{file: "output/' + username + '.png"}')
+            return_code = os.system("python " + os.getcwd() + "/lastfm.py " + username)
+        if return_code == 0:
+            self.wfile.write('{"file": "output/' + username + '.png"}')
+        else:
+            self.wfile.write('{"error": "user not found"}')            
         
 def run(server_class=HTTPServer, handler_class=S, port=80):
     server_address = ('', port)
