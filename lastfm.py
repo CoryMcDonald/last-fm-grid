@@ -4,6 +4,7 @@ from PIL import ImageDraw
 import pylast
 import urllib
 import os.path
+import os
 import sys
 
 API_KEY = '71cccbdefd11231bc24e3f95d460b2a3'
@@ -22,7 +23,7 @@ def main():
 
     for album in albums:
         album_image = album.item.get_cover_image(pylast.COVER_EXTRA_LARGE)
-        file_name = 'images/'
+        file_name = os.getcwd() + '/images/'
         file_name += album_image[album_image.rfind('/')+1:]
         if not os.path.isfile(file_name):
             image_file = urllib.URLopener()
@@ -54,6 +55,6 @@ def main():
 
 
     draw.text((10, 5), user + ' - ' + time_period, (255, 255, 255), font=font)
-    grid_image.save('output/' + user + '.png')
+    grid_image.save(os.getcwd() + '/output/' + user + '.png')
 
 main()
