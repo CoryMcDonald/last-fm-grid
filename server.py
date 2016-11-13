@@ -86,14 +86,18 @@ class S(BaseHTTPRequestHandler):
         # Doesn't do anything with posted data
         self._set_headers()
         postvars = self.parse_POST()
+        print 'parsed variables', postvars
         return_code = 1
         if 'username' in postvars:
             username = postvars['username']
             if username is None or len(username) != 1:
+                print 'could not find username'
                 self.wfile.write('{"error": "user not found"}')
                 return            
             username = username[0]
+            print 'running script for user:', username
             return_code = os.system("python " + os.getcwd() + "/lastfm.py " + username)
+            print 'script finished return code:', return_code
         if return_code == 0:
             self.wfile.write('{"file": "output/' + username + '.png"}')
         else:
